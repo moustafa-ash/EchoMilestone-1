@@ -4,13 +4,12 @@ from pathlib import Path
 import streamlit as st
 
 sys.path.append(str(Path(__file__).resolve().parent.parent))
-from src.generation.chain import FinConRAGPipeline
-from src.ingestion.run_ingestion import run_ingestion_pipeline
 
 st.set_page_config(page_title="FinCon Research", page_icon="📚", layout="wide")
 
 @st.cache_resource
 def get_pipeline():
+    from src.generation.chain import FinConRAGPipeline
     return FinConRAGPipeline()
 
 styles = {
@@ -30,6 +29,7 @@ with st.sidebar:
     if st.button("Run document ingestion"):
         try:
             with st.spinner("Building document indexes..."):
+                from src.ingestion.run_ingestion import run_ingestion_pipeline
                 run_ingestion_pipeline()
                 get_pipeline.clear()
             st.success("Document ingestion complete.")
