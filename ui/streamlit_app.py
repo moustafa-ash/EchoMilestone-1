@@ -33,8 +33,8 @@ st.markdown(f"""<style>
     [data-testid="stSidebar"] {{background: {surface};}}
     .stApp h1, .stApp h2, .stApp h3 {{font-family: {heading}; color: {ink};}}
     .stApp p, .stApp label, .stApp span {{color: {ink};}}
-    button[kind="primary"] {{background: {accent} !important; color: {bg} !important; border: 0;}}
-    button[kind="primary"] p {{color: {bg} !important;}}
+    button[data-testid="stBaseButton-primaryFormSubmit"] {{background: {accent}; border: 0;}}
+    button[data-testid="stBaseButton-primaryFormSubmit"] p {{color: {bg};}}
     button[kind="secondary"] {{background: {surface}; color: {ink};}}
     button[kind="secondary"] p {{color: {ink};}}
     .block-container {{max-width: 1250px; padding-top: 3rem;}}
