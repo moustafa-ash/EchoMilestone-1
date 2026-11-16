@@ -46,10 +46,14 @@ st.markdown(f"""<style>
     [data-testid="stSidebar"] {{background: {surface};}}
     .stApp h1, .stApp h2, .stApp h3 {{font-family: {heading}; color: {ink};}}
     .stApp p, .stApp label, .stApp span {{color: {ink};}}
-    .stButton button[kind="primary"] {{background: {accent}; color: {bg}; border: 0;}}
+    button[kind="primary"] {{background: {accent} !important; color: {bg} !important; border: 0;}}
+    button[kind="primary"] p {{color: {bg} !important;}}
+    button[kind="secondary"] {{background: {surface}; color: {ink};}}
+    button[kind="secondary"] p {{color: {ink};}}
     .block-container {{max-width: 1250px; padding-top: 3rem;}}
     [data-testid="stExpander"] {{background: {surface};}}
     div[data-testid="stTextInput"] input {{background: {surface}; color: {ink};}}
+    div[data-testid="stTextInput"] input::placeholder {{color: {ink}; opacity: .7;}}
 </style>""", unsafe_allow_html=True)
 
 samples = [
