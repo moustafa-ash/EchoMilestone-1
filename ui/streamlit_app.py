@@ -39,6 +39,10 @@ st.markdown(f"""<style>
     button[kind="secondary"] p {{color: {ink};}}
     .block-container {{max-width: 1250px; padding-top: 3rem;}}
     [data-testid="stExpander"] {{background: {surface};}}
+    [data-testid="stExpander"] summary, [data-testid="stExpander"] summary:hover {{background: {surface};}}
+    [data-testid="stAlertContainer"]:has([data-testid="stAlertContentInfo"]) {{background: #e7f1eb; color: {ink};}}
+    [data-testid="stCode"] pre {{background: #f1ede4;}}
+    [data-testid="stCode"] code, [data-testid="stCode"] code span {{color: {ink};}}
     div[data-testid="stTextInput"] input {{background: {surface}; color: {ink};}}
     div[data-testid="stTextInput"] input::placeholder {{color: {ink}; opacity: .7;}}
 </style>""", unsafe_allow_html=True)
