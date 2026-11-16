@@ -12,19 +12,8 @@ def get_pipeline():
     from src.generation.chain import FinConRAGPipeline
     return FinConRAGPipeline()
 
-styles = {
-    "Research Desk": ("#f6f2e9", "#fffdf8", "#292e2b", "#42665a", "Georgia, serif"),
-    "Analyst Terminal": ("#111d20", "#1c2c2f", "#e5f1ed", "#70d5bd", "Arial, sans-serif"),
-    "Compliance Brief": ("#f4f7fb", "#ffffff", "#172943", "#315b97", "Arial, sans-serif"),
-}
-names = list(styles)
-requested = st.query_params.get("style", names[0])
-if "style" not in st.session_state:
-    st.session_state.style = requested if requested in names else names[0]
 with st.sidebar:
     st.markdown("## FinCon Research")
-    st.radio("Visual style", names, key="style")
-    st.markdown("---")
     top_k = st.slider("Results to rerank", 1, 8, 3)
     if st.button("Run document ingestion"):
         try:
@@ -38,9 +27,7 @@ with st.sidebar:
     st.markdown("---")
     st.caption("Financial controlling and regulatory research")
 
-style = st.session_state.style
-st.query_params["style"] = style
-bg, surface, ink, accent, heading = styles[style]
+bg, surface, ink, accent, heading = ("#f6f2e9", "#fffdf8", "#292e2b", "#42665a", "Georgia, serif")
 st.markdown(f"""<style>
     .stApp, [data-testid="stHeader"] {{background: {bg}; color: {ink};}}
     [data-testid="stSidebar"] {{background: {surface};}}
@@ -82,40 +69,19 @@ if submitted:
         try:
             with st.spinner("Searching documents and preparing an answer..."):
                 st.session_state.result = get_pipeline().run(query=question, top_k_rerank=top_k)
-                st.session_state.is_example = False
         except Exception as exc:
             st.error(f"Search failed: {exc}")
 
-if st.button("Show example result"):
-    st.session_state.result = {
-        "answer": "A material cybersecurity incident is disclosed on Form 8-K within four business days after the materiality determination. [Source: financial_regulatory_standards_2026.json]",
-        "sources": ["financial_regulatory_standards_2026.json"],
-        "retrieved_child_chunks": [], "context_used": "Example preview.",
-    }
-    st.session_state.is_example = True
-
 result = st.session_state.get("result")
 if result:
-    if st.session_state.get("is_example"):
-        st.info("Example result for preview. Run a search for a live answer.")
-    if style == "Compliance Brief":
+    answer_col, source_col = st.columns([2.2, 1])
+    with answer_col:
         st.subheader("Answer")
         st.markdown(result["answer"])
+    with source_col:
         st.subheader("Sources")
-        for number, source in enumerate(result.get("sources", []), 1):
-            st.write(f"{number}. {source}")
-    else:
-        answer_col, source_col = st.columns([2.2, 1])
-        with answer_col:
-            st.subheader("Answer")
-            st.markdown(result["answer"])
-        with source_col:
-            st.subheader("Sources" if style == "Research Desk" else "Evidence")
-            for source in result.get("sources", []):
-                st.write(source)
-            if style == "Analyst Terminal":
-                for rank, chunk in enumerate(result.get("retrieved_child_chunks", []), 1):
-                    st.write(f"{rank}. {chunk.get('id', '')} · score {chunk.get('rerank_score', 0):.4f}")
+        for source in result.get("sources", []):
+            st.write(source)
     entities = result.get("entities", [])
     if entities:
         st.write("Recognized entities: " + ", ".join(f"{item['text']} ({item['label']})" for item in entities))
